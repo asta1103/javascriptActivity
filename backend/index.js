@@ -407,7 +407,7 @@ const addRecord = [
     {
         fullName: "Vic Santos",
         Email: "vic@gmail.com",
-        message: "hank you for making learning an enjoyable experience",
+        message: "Thank you for making learning an enjoyable experience",
     },
 ];
 
