@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Home Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+      body {
+        padding-top: 56px; /* Adjust according to your navigation bar height */
+      }
+  
+      @media (min-width: 992px) {
+        body {
+          padding-top: 70px; /* Adjust according to your navigation bar height */
+        }
+      }
+    </style>
+  </head>
+
+<body>
+
+    
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <a class="navbar-brand" href="#">Your Logo</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/home">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- Header -->
+  <header class="container-fluid text-center mt-5">
+    <h1>Welcome to Your Website</h1>
+    <p>A short description of your website goes here.</p>
+  </header>
+  
+  <!-- Main Content -->
+  <section class="container mt-4">
+    
+    <div class="row">
+      
+        <div class="col-md-10">
+        <h2>Main Content</h2>
+        <p id="main_p_content" ></p>
+    </div>
+
+    <div class="col-md-2">
+        <h2>Side Content</h2>
+        <p>Your side content goes here.</p>
+    </div>
+    
+  </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="container-fluid text-center mt-5">
+    <p>&copy; 2024 Your Website. All Rights Reserved.</p>
+  </footer>
+  
+  <!-- Bootstrap JS and jQuery (required for Bootstrap) -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  
+  
+  <script>
+
+async function loadHomePageContent() {
+
+    const result = await fetch('http://localhost:5000/page-content/home'); //requesting
+    const data = await result.json();
+
+    document.getElementById('main_p_content').innerHTML = data;
+
+}
+
+loadHomePageContent();
+
+
+  </script>
+
+</body>
+</html>

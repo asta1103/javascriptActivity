@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="displayError" class="error"></div>
+    <form id="loginForm">
+        <label for="eamil">email</label> <br />
+        <input type="text" name="email" id="email" placeholder="Enter your email"> <br />
+        <label for="password">Password</label> <br />
+        <input type="password" name="password" id="current-password" placeholder="Enter your password"> <br />
+
+        <br />        
+        <p>Dont have an account yet?</p><a href="/registration">Register</a> <br>
+        <br>
+        <button type="button" id="formSubmit">Login</button>
+    </form>
+
+    <script>
+        document.getElementById('formSubmit').addEventListener('click', async function() {
+            const result = await fetch('http://localhost:5000/all-profiles');
+            const data = await result.json();
+    
+            const emailField = document.getElementById('email');
+            const passwordField = document.getElementById('current-password');
+            const displayError = document.getElementById('displayError');
+    
+            const email = emailField.value.trim();
+            const password = passwordField.value.trim();
+    
+            if (email === '' || password === '') {
+                displayError.textContent = 'Email and password are required.';
+            } else {
+                const userExists = data.find((userData) => userData.email === email && userData.password === password);
+    
+                if (userExists) {
+                    console.log('User authenticated:', userExists);
+                    localStorage.setItem('loginUser', JSON.stringify(userExists));
+                    window.location.href = 'http://localhost:3000/';
+                } else {
+                    console.log('Invalid email or password:', email);
+                    displayError.textContent = 'Invalid email or password.';
+                }
+            }
+        });
+
+        <!-- // Assuming you have a server-side endpoint for user validation
+                // const webservice_api_url = 'http://localhost:5000/login-validation';
+
+                // const data = {
+                //     username: username,
+                //     password: password
+                // };
+
+                // const requestOption = {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(data),
+                // };
+
+                // fetch(webservice_api_url, requestOption)
+                //     .then(response => {
+                //         if (!response.ok) {
+                //             throw new Error('Network response was not ok');
+                //         }
+                //         return response.json();
+                //     })
+                //     .then(data => {
+                //         console.log('check here:', data);
+
+                //         if (data.code === 'success') {
+                //             localStorage.setItem('loginUser', JSON.stringify(data.loginUser));
+                //             window.location.href = 'http://localhost:3000/';
+                //         } else {
+                //             displayError.textContent = data.msg;
+                //         }
+                //     })
+                //     .catch(error => {
+                //         console.log(error);
+                //         displayError.textContent = 'Error occurred during login.';
+                //     });
+            
+    -->
+
+
+    </script>
+    </body>
+    </html>
+               
+

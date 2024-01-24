@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+</head>
+<body>
+    <form id="registrationForm">
+        <label for="username">Firstname</label> <br />
+        <input type="text" name="firstname" id="firstname" placeholder="Enter your firstname"> <br />
+        <label for="username">Lastname</label> <br />
+        <input type="text" name="lastname" id="lastname" placeholder="Enter your lastname"> <br />
+        <label for="username">Phone</label> <br />
+        <input type="tel" name="phone" id="Phone" placeholder="Enter your phone"> <br />
+        <label for="username">Address</label> <br />
+        <input type="text" name="address" id="address" placeholder="Enter your address"> <br />
+        <label for="username">Email</label> <br />
+        <input type="email" name="email" id="email" placeholder="Enter your email"> <br />
+        <label for="username">Create Paasword</label> <br />
+        <input type="password" name="password" id="password" placeholder="Enter Password"> <br />
+        <label for="username">Confirm Password</label> <br />
+        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Enter Password"> <br />
+    <br />        
+    <div id="exist-message" style="color: red;"></div>
+
+    <p>Already have an account?</p><a href="/login">Login</a><br>
+    <br>
+    <button type="button" id="formSubmit">Registration</button>
+    </form>
+
+    <script>
+        document.getElementById('formSubmit').addEventListener('click', function () {
+            // Validate form fields
+            if (!validateForm()) {
+                // Display error messages or prevent the registration request
+                return;
+            }
+
+            if (!matchPasswords()) {
+            // Display error messages or prevent the registration request
+            document.getElementById('exist-message').innerText = 'Passwords do not match!';
+            return;
+        }
+
+            // Check if the record already exists before making the registration request
+            checkRecordExists().then(recordExists => {
+                if (recordExists) {
+                    // Display error messages or prevent the registration request
+                    document.getElementById('exist-message').innerText = 'Record already exist!';
+             
+                } else {
+                    // Proceed with the registration request
+                    submitRegistration();
+                }
+            });
+        });
+
+        function validateForm() {
+            var firstname = document.getElementById('firstname').value;
+            var lastname = document.getElementById('lastname').value;
+            var phone = document.getElementById('Phone').value;
+            var address = document.getElementById('address').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!firstname || !lastname || !phone || !address || !email || !password || !confirmPassword) {
+            // Display error messages or highlight required fields
+            document.getElementById('exist-message').innerText = 'Please fill in all required fields!';
+            // console.error('Please fill in all required fields.');
+            return false;
+        }
+
+        return true;
+    }
+
+    function matchPasswords() {
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
+
+        return password === confirmPassword;
+    }
+        function checkRecordExists() {
+            var firstname = document.getElementById('firstname').value;
+            var lastname = document.getElementById('lastname').value;
+            var phone = document.getElementById('Phone').value;
+            var address = document.getElementById('address').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+
+            var url = 'http://localhost:5000/checkRecord'; // Replace with your server endpoint for checking record existence
+
+            var formData = {
+                firstname: firstname,
+                lastname: lastname,
+                phone: phone,
+                address: address,
+                email: email,
+                password: password,
+                confirmPassword: confirmPassword
+            };
+
+            return fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => data.recordExists)
+            .catch(error => {
+                console.error('Error checking record existence:', error);
+                return false;
+            });
+        }
+
+        function submitRegistration() {
+            var firstname = document.getElementById('firstname').value;
+            var lastname = document.getElementById('lastname').value;
+            var phone = document.getElementById('Phone').value;
+            var address = document.getElementById('address').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+
+            var formData = {
+                firstname: firstname,
+                lastname: lastname,
+                phone: phone,
+                address: address,
+                email: email,
+                password: password,
+                confirmPassword: confirmPassword
+            };
+
+            var url = 'http://localhost:5000/registration';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response from backend:', data);
+                // Optionally, redirect to a login page or show a success message to the user
+                if (data.code === 'success') {
+                    // Redirect to the login page
+                    window.location.href = "/login";
+                } else {
+                    // Display an error message to the user
+                    document.getElementById('exist-message').innerText = 'Registration failed. Please try again.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

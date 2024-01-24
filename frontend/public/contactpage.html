@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact-us Page</title>
+</head>
+<body>
+    <form id="contactUsForm">
+        <label for="fullname">Fullname:</label> <br />
+        <input type="text" name="fullname" id="fullName" placeholder="Enter your fullname"> <br />
+        <label for="email">Email Address:</label> <br />
+        <input type="text" name="email" id="Email" placeholder="Enter your email address"> <br />
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" placeholder="Enter your Message"></textarea><br>
+        <button type="button" id="add">Add Record</button>
+    </form>
+
+
+    <script>
+        document.getElementById('add').addEventListener('click', function (event) {
+            event.preventDefault();
+            
+            // You can add logic to collect form data and send it to the back-end API
+            // Example using fetch:
+            fetch('http://localhost:5000/addRecord', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    fullName: document.getElementById('fullName').value,
+                    Email: document.getElementById('Email').value,
+                    message: document.getElementById('message').value,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Record:', data);
+                // You can redirect or perform any other action as needed
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+    
+</body>
+</html>

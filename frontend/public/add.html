@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CREATE USER</title>
+</head>
+<body>
+    <form>
+        <label for="firstname">Firstname</label> <br />
+        <input type="text" name="firstname" id="firstname" placeholder="Enter your firstname"> <br />
+        <label for="lastname">Lastname</label> <br />
+        <input type="text" name="lastname" id="lastname" placeholder="Enter your lastname"> <br />
+        <label for="Phone">Phone</label> <br />
+        <input type="tel" name="phone" id="Phone" placeholder="Enter your phone"> <br />
+        <label for="address">Address</label> <br />
+        <input type="text" name="address" id="address" placeholder="Enter your address"> <br />
+        <label for="email">Email</label> <br />
+        <input type="email" name="email" id="email" placeholder="Enter your email"> <br />
+        <br />
+        <div id="error-message" style="color: red;"></div>
+        <div id="existing-record-message" style="color: red;"></div>
+        <br />        
+        <button type="button" id="formSubmit">Add</button>
+    </form>
+
+    <script>
+        document.getElementById('formSubmit').addEventListener('click', function () {
+            var firstname = document.getElementById('firstname').value;
+            var lastname = document.getElementById('lastname').value;
+            var phone = document.getElementById('Phone').value;
+            var address = document.getElementById('address').value;
+            var email = document.getElementById('email').value;
+
+            if (!firstname || !lastname || !phone || !address || !email) {
+                document.getElementById('error-message').innerText = 'Please fill in all fields';
+                return;
+            }
+            document.getElementById('error-message').innerText = '';
+
+            var formData = {
+                firstname: firstname,
+                lastname: lastname,
+                phone: phone,
+                address: address,
+                email: email
+            };
+
+            var urlCheckExistence = 'http://localhost:5000/check-user-existence';
+
+            // Check if the user already exists
+            fetch(urlCheckExistence, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    document.getElementById('existing-record-message').innerText = 'User already exists';
+                    
+                } else {
+                    document.getElementById('existing-record-message').innerText = '';
+                    
+                    var urlAddUser = 'http://localhost:5000/add-user';
+
+                    // Add the user if it doesn't exist
+                    fetch(urlAddUser, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code == 'success') {
+                            console.log('Success:', data);
+                            window.location.href = "http://localhost:3000"; // Redirect to index
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
+
